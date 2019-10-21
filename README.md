@@ -22,4 +22,6 @@ Make sure you have installed docker, docker-compose and curl.
 - The third required demonstration is paginated request
 `curl --user test@test.com:123Qwertyu http://127.0.0.1:8010/currencies/?limit=2&offset=2`
 
-#### Prevension
+#### Preventions
+- I strongly do not recommend using stateful services like DBMS inside docker in production.
+- API GET /rate/ which had to return the last rate by currency id - is not a conventional RESTFul approach and was changed to /currencies/currency-id/rate/.

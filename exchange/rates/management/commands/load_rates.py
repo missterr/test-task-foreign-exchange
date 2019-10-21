@@ -1,15 +1,13 @@
-import time
 from datetime import datetime
+from django.core.management import BaseCommand
 from rates.utils import requests_retry_session
 from rates.models import Rate, Currency
-from django.core.management import BaseCommand
-
-CURRENCIES = ('BTC', 'ETH', 'LTC', 'XRP', 'BAB')
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
         for currency in Currency.objects.all():
+            currency.rate_set.all().delete()
             url = f'https://api-pub.bitfinex.com/v2/candles/trade:1D:t{currency.name}USD/hist?limit=10'
 
             nonce = int(datetime.timestamp(datetime.now()) * 1000000)

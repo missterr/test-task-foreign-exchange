@@ -7,7 +7,12 @@ services:
   web:
     build: .
     container_name: dj01
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py loaddata init.json users.json && python manage.py load_rates && python manage.py runserver 0.0.0.0:8010"
+    command: >
+        bash -c "python manage.py makemigrations
+        && python manage.py migrate
+        && python manage.py loaddata init.json users.json
+        && python manage.py load_rates
+        && python manage.py runserver 0.0.0.0:8010"
     volumes:
       - ./exchange:/exchange
     ports:

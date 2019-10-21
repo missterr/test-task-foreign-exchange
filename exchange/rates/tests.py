@@ -60,7 +60,7 @@ class ExchangeAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
 
-    def test_avg_currency_volume(self):
+    def tes_retrieve_avg_currency_volume(self):
         currency = self.currencies[0]
         url = reverse('currency-detail', args=(currency.id,))
         self.client.force_authenticate(user=self.user)

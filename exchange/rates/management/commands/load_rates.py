@@ -12,7 +12,9 @@ class Command(BaseCommand):
         for currency in Currency.objects.all():
             url = f'https://api-pub.bitfinex.com/v2/candles/trade:1D:t{currency.name}USD/hist?limit=10'
 
-            response = requests_retry_session().get(url)
+            nonce = int(datetime.timestamp(datetime.now()) * 1000000)
+            response = requests_retry_session(headers={'bfx-nonce': nonce},
+                                              retries=5, backoff_factor=0.3).get(url)
             response.raise_for_status()
             candles = response.json()
 

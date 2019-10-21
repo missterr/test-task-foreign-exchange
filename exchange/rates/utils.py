@@ -4,6 +4,7 @@ from urllib3.util.retry import Retry
 
 
 def requests_retry_session(
+    headers={},
     retries=5,
     backoff_factor=0.5,
     status_forcelist=(500, 502, 504),
@@ -18,6 +19,7 @@ def requests_retry_session(
         status_forcelist=status_forcelist,
     )
     adapter = HTTPAdapter(max_retries=retry)
+    adapter.add_headers(headers)
     session.mount('http://', adapter)
     session.mount('https://', adapter)
     return session

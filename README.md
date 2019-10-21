@@ -22,3 +22,4 @@ Make sure you have installed docker, docker-compose and curl.
 - The third required demonstration is paginated request
 `curl --user test@test.com:123Qwertyu http://127.0.0.1:8010/currencies/?limit=2&offset=2`
 
+#### Prevension

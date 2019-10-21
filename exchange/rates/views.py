@@ -1,4 +1,3 @@
-from django.db.models import Avg
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -28,10 +27,8 @@ class CurrencyView(ReadOnlyModelViewSet):
     @action(methods=['get'], detail=True)
     def rate(self, request, *args, **kwargs):
         instance = self.get_object()
-        latest_rate = instance.rate_set.order_by('date').last().rate
-        avg_query = instance.rate_set.order_by('date')[:10].aggregate(Avg('volume'))
-        # Could not find values which cannot be handled by float
-        average_volume = float(avg_query.get('volume__avg'))
-        return Response({'latest_rate': latest_rate,
-                         'average_volume': average_volume})
+        return Response({
+            'latest_rate': instance.latest_rate,
+            'average_volume': float(instance.get_volume_average(10))
+        })
 

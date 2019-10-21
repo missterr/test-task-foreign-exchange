@@ -2,7 +2,6 @@ import json
 import factory
 import factory.fuzzy
 from datetime import datetime
-from django.db.models import Avg
 from django.contrib.auth.models import User
 
 from rest_framework.test import APITestCase
@@ -60,7 +59,7 @@ class ExchangeAPITestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
 
-    def tes_retrieve_avg_currency_volume(self):
+    def test_retrieve_volume_avg(self):
         currency = self.currencies[0]
         url = reverse('currency-detail', args=(currency.id,))
         self.client.force_authenticate(user=self.user)
@@ -70,10 +69,8 @@ class ExchangeAPITestCase(APITestCase):
         url = reverse('currency-rate', args=(currency.id,))
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        latest_rate = currency.rate_set.order_by('date').last().rate
-        avg_query = currency.rate_set.order_by('date')[:10].aggregate(Avg('volume'))
-        average_volume = float(avg_query.get('volume__avg'))
-        self.assertJSONEqual(json.dumps(response.data), json.dumps({'latest_rate': latest_rate,
-                                                                    'average_volume': average_volume}))
+        self.assertJSONEqual(json.dumps(response.data),
+                             json.dumps({'latest_rate': currency.latest_rate,
+                                         'average_volume': float(currency.get_volume_average(10))}))
 
 
